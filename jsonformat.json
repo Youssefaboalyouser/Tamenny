@@ -1,0 +1,105 @@
+// marowan output
+{
+  "email_id": "uuid-1234",
+  "timestamp": "2025-04-17T10:00:00Z",
+  "sender": {
+    "name": "PayPal Support",
+    "email": "support@paypa1.com",
+    "domain": "paypa1.com",
+    "reply_to": "different@suspicious.com"
+  },
+  "recipient": "youssef@example.com",
+  "subject": "Urgent: Your account is suspended",
+  "body": {
+    "plain_text": "...",
+    "html": "...",
+    "language": "en"
+  },
+  "links": ["http://paypa1.com/login", "http://bit.ly/xyz"],
+  "attachments": [
+    {
+      "filename": "invoice.pdf",
+      "type": "application/pdf",
+      "hash_md5": "abc123",
+      "hash_sha256": "def456"
+    }
+  ],
+  "headers": {
+    "spf": "fail",
+    "dkim": "fail",
+    "dmarc": "fail",
+    "x_mailer": "Outlook 16.0",
+    "received_from_ip": "192.168.1.1"
+  }
+}
+// =========================================================
+// abdelrahman output
+{
+  "email_id": "uuid-1234",
+  "virustotal": {
+    "links": [
+      {
+        "url": "http://paypa1.com/login",
+        "malicious_votes": 12,
+        "clean_votes": 3,
+        "verdict": "malicious"
+      }
+    ],
+    "attachments": [
+        {
+        "filename": "invoice.pdf",
+        "hash_sha256": "def456",
+        "malicious_votes": 0,
+        "clean_votes": 45,
+        "verdict": "clean"
+      }
+    ],
+    "error": null
+    }
+}
+// If VirusTotal fails → set "error": "timeout" and "links": null so your code doesn't crash.
+// =========================================================
+// youssef output
+{
+  "email_id": "uuid-1234",
+  "rule_based": {
+    "score": 75,
+    "flags": [
+      "SPF failed",
+      "Domain misspelled (paypa1.com)",
+      "Reply-To mismatch",
+      "Malicious link detected by VirusTotal",
+      "Urgent language in subject"
+    ]
+  }
+}
+// =========================================================
+// omar and mohamed output
+{
+  "email_id": "uuid-1234",
+  "nlp": {
+      "score": 82,
+      "confidence": 0.91,
+      "top_indicators": [
+          "Urgency language detected",
+          "Impersonation pattern",
+          "Suspicious call-to-action"
+        ]
+    }
+}
+// =========================================================
+// final aggregation output 
+{
+  "email_id": "uuid-1234",
+  "final_score": 78,
+  "verdict": "phishing",
+  "rule_based_score": 75,
+  "nlp_score": 82,
+  "key_reasons": [
+    "Sender domain is misspelled",
+    "Email failed SPF and DKIM checks",
+    "Malicious link detected",
+    "Urgent threatening language used"
+  ],
+  "timestamp": "2025-04-17T10:05:00Z"
+}
