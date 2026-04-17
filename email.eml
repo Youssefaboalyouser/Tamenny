@@ -1,0 +1,236 @@
+Delivered-To: marwan.abdelgawad7@gmail.com
+Received: by 2002:a05:6400:68cc:10b0:2c7:52b0:798f with SMTP id c12-n1csp1238897eca;
+        Fri, 20 Feb 2026 05:15:27 -0800 (PST)
+X-Received: by 2002:a05:620a:f0d:b0:8bb:7886:7e1f with SMTP id af79cd13be357-8cb856f9debmr178273785a.36.1771593326458;
+        Fri, 20 Feb 2026 05:15:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771593326; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EN+4ZoB2yXfck2gfaj7j41UMou+0DEmbU+ekMSD5YJ4y+RkMIvqM+6oqZ3AdESk1J/
+         YD3e9ciK4HVObdcqcLvL4QbqX7WnyaF50mLyzWf2q357jW6nQxwQLl+gCBHZBUHUrzSP
+         Kv05xzsvx5iQu62pHNZdRPIanfEokjbBOQ7ZKusym0Q3KLJ2DOjN297IogXqB0c1DM3s
+         tVBQPpC8wpFvg4VvfNvQZR3JCjaJihw2BgKEic97C2iJmMEzzvuubCWMXJrmUoW5YH+F
+         gvpt1/kbatyPZ7CH0hjsD37KPprTqADsFfszFBz8U3rL9OYT+IwqlGUPmLptRIGLV0nW
+         jIUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:mime-version:subject:message-id:to:from:date
+         :dkim-signature:dkim-signature;
+        bh=s9CMMQ5TLBWqwvkDwFPPdZIppjLJMxx5kMNo9KXvM8k=;
+        fh=tcY37THe40LvP9n43/7XL2sqq9exf3wWekvXpJJCdvs=;
+        b=aiPIwr5EZ3uupNvJIyzsTFcbKvCYKDO4I/XIfvzTSE38sWumMAF4O31H+gWNTv9Js7
+         ioVNRuf7kkNpZyDWffK4mpZk+W63LDvV7l62PbgoWVbK8Qt53Rot6Oju2vCHY2CyU/Wa
+         AabZxsl3sdcjgl26zSTaNGsXpYw47FbzApP3mw+vcrnf1NGnMmSDn61QE+fU3rcsJuGb
+         UTs2UDK4usSInQSD5ykW/njYYDP/TD/eIaisTxIjsEZ3KqLwM5kXncYYjO+pSw6v8I8U
+         t6y+84ucAYYKLIsfg9uQrc2uesLbIbOtMHT9A7tn1+0Gyi9Y/lB8B3whB3swdVuut4Bx
+         x7Ng==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@netacad.com header.s=7ccwqbqmjadvrzmsge4fkwpkzlv67jp5 header.b=ZxFVfS5U;
+       dkim=pass header.i=@amazonses.com header.s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw header.b=YSBHq6ZC;
+       spf=pass (google.com: domain of 0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com designates 54.240.8.156 as permitted sender) smtp.mailfrom=0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=netacad.com
+Return-Path: <0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com>
+Received: from a8-156.smtp-out.amazonses.com (a8-156.smtp-out.amazonses.com. [54.240.8.156])
+        by mx.google.com with ESMTPS id af79cd13be357-8cb2b2611fesi2595793685a.581.2026.02.20.05.15.26
+        for <marwan.abdelgawad7@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Feb 2026 05:15:26 -0800 (PST)
+Received-SPF: pass (google.com: domain of 0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com designates 54.240.8.156 as permitted sender) client-ip=54.240.8.156;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@netacad.com header.s=7ccwqbqmjadvrzmsge4fkwpkzlv67jp5 header.b=ZxFVfS5U;
+       dkim=pass header.i=@amazonses.com header.s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw header.b=YSBHq6ZC;
+       spf=pass (google.com: domain of 0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com designates 54.240.8.156 as permitted sender) smtp.mailfrom=0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@amazonses.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=netacad.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=7ccwqbqmjadvrzmsge4fkwpkzlv67jp5; d=netacad.com; t=1771593326;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type;
+	bh=jcr/VRUjRIhbqlEeY3RlmYZ6zkf/ZqK81G3cuyHysQQ=;
+	b=ZxFVfS5U24jyhC4cQpr/OemBYotuhVnbQi8hc9DTWH7Z/QaM6a1maY0ScBTSXcG0
+	FRxDFSGLKpPvgEFXDD6hCvHUYZ1ia1qkRVMMpZ2JVnGC5cJvGLWOMzCAsQ2L7zs9mKT
+	rnVDyvBq8G7+OGPNI2IOlsU4p5gqJbZX+CCSCQ4nM44LS+rVFrQNbLFYkZ7LYyQRMB6
+	y2g7bKfU1OLVBwfaWnSh/FQMNn+0TT5/JHAl+vTwtbhHFqnrY9YcanY76D38U+r4Clq
+	gEqGhENwycP6i6nijzOOibv8SCkcHkOx/VyRVhc+pnWG9VGa+XtNY0eWNlpUIMXaPjw
+	jt54L2ovTw==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1771593326;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type:Feedback-ID;
+	bh=jcr/VRUjRIhbqlEeY3RlmYZ6zkf/ZqK81G3cuyHysQQ=;
+	b=YSBHq6ZCo8q3oYzGXCq+a0LB6eYE2EBkwDUBRLAK3ECghDZ9mR9F9z2emslQEB4c
+	4T7OEH8T/Qe9ywZmV3U1vQhDNDiTn9zX/V8ERt8CsFAPP3noTU34SELorKhFamQ6pkq
+	vnfsNZ5QgVweJXUu9Tn9OUGi1lFRk/vvZEX6szlE=
+Date: Fri, 20 Feb 2026 13:15:26 +0000
+From: Cisco Networking Academy <noreply@netacad.com>
+To: marwan.abdelgawad7@gmail.com
+Message-ID: <0100019c7b30ddcc-9dc59d0c-74ad-4a63-b3cf-8be1ef8374b4-000000@email.amazonses.com>
+Subject: Bravo Marwan.! Claim Your Digital Credential
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_939616_614395364.1771593325928"
+Feedback-ID: ::1.us-east-1.F/duEknHii2FmJkQuDbJqpyFC+1d1fFAd4HTgo6Oe08=:AmazonSES
+X-SES-Outgoing: 2026.02.20-54.240.8.156
+
+------=_Part_939616_614395364.1771593325928
+Content-Type: multipart/related; 
+	boundary="----=_Part_939617_62790053.1771593325928"
+
+------=_Part_939617_62790053.1771593325928
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html><html lang=3D"en"><head><meta content=3D"text/html; charset=
+=3Dutf-8" http-equiv=3D"Content-type"><meta content=3D"width=3Ddevice-width=
+,initial-scale=3D1,maximum-scale=3D1" name=3D"viewport"><meta content=3D"IE=
+=3Dedge" http-equiv=3D"X-UA-Compatible"><meta content=3D"date=3Dno" name=3D=
+"format-detection"><meta content=3D"address=3Dno" name=3D"format-detection"=
+><meta content=3D"telephone=3Dno" name=3D"format-detection"><meta name=3D"x=
+-apple-disable-message-reformatting"><link href=3D"https://www.cisco.com/we=
+b/fw/cisco-ui/2.0.4/dist/css/cui-standard.min.css" rel=3D"stylesheet" type=
+=3D"text/css"><title>Badge Issuance</title><style media=3D"screen" type=3D"=
+text/css">body{padding:0!important;margin:0!important;display:block!importa=
+nt;min-width:100%!important;width:100%!important;background:#eee;-webkit-te=
+xt-size-adjust:none}a{color:#000001;text-decoration:none}p{padding:0!import=
+ant;margin:0!important}img{-ms-interpolation-mode:bicubic}.mcnPreviewText{d=
+isplay:none!important}.text-footer2 a{color:#fff}@media only screen and (ma=
+x-device-width:480px),only screen and (max-width:480px){.mobile-shell{width=
+:100%!important;min-width:100%!important}.m-center{text-align:center!import=
+ant}.m-left{text-align:left!important;margin-right:auto!important}.center{m=
+argin:0 auto!important}.content2{padding:8px 15px 12px!important}.t-left{fl=
+oat:left!important;margin-right:30px!important}.t-left-2{float:left!importa=
+nt}.td{width:100%!important;min-width:100%!important}.content{padding:30px =
+15px!important}.section{padding:30px 15px 0!important}.m-br-15{height:15px!=
+important}.mpb5{padding-bottom:5px!important}.mpb15{padding-bottom:15px!imp=
+ortant}.mpb20{padding-bottom:20px!important}.mpb30{padding-bottom:30px!impo=
+rtant}.m-padder{padding:0 15px!important}.m-padder2{padding-left:15px!impor=
+tant;padding-right:15px!important}.p70{padding:30px 0!important}.pt70{paddi=
+ng-top:30px!important}.p0-15{padding:0 15px!important}.p30-15{padding:30px =
+15px!important}.p30-15-0{padding:30px 15px 0 15px!important}.p0-15-30{paddi=
+ng:0 15px 30px 15px!important}.text-footer{text-align:center!important}.m-h=
+ide,.m-td{display:none!important;width:0!important;height:0!important;font-=
+size:0!important;line-height:0!important;min-height:0!important}.m-block{di=
+splay:block!important}.fluid-img img{width:100%!important;max-width:100%!im=
+portant;height:auto!important}.column,.column-bottom,.column-dir,.column-em=
+pty,.column-empty2,.column-top,.column-top-30,.column-top-60{float:left!imp=
+ortant;width:100%!important;display:block!important}.column-empty{padding-b=
+ottom:15px!important}.column-empty2{padding-bottom:30px!important}.content-=
+spacing{width:15px!important}}</style></head><body class=3D"body cui" style=
+=3D"padding:0!important;margin:0!important;display:block!important;min-widt=
+h:100%!important;width:100%!important;background:#eee;-webkit-text-size-adj=
+ust:none"><table bgcolor=3D"#eaf2f2" border=3D"0" cellpadding=3D"0" cellspa=
+cing=3D"0" width=3D"100%"><tr><td align=3D"center" style=3D"padding:25px 0"=
+ valign=3D"top"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" cla=
+ss=3D"mobile-shell" width=3D"650"><tr><td class=3D"td" style=3D"width:650px=
+;min-width:650px;font-size:0;line-height:0;padding:0;margin:0;font-weight:4=
+00"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%">=
+<tr><td class=3D"p30-15 img-center" style=3D"padding:30px 0 15px 0;font-siz=
+e:0;line-height:0;text-align:left"><a href=3D"#" rel=3D"noopener" target=3D=
+"_blank"><img alt=3D"netacadLogo" alt=3D"" border=3D"0" height=3D"50" src=
+=3D"https://netacad.com/skillsforall/img/email/netacadLogo.png" style=3D"he=
+ight:35px!important" width=3D""></a></td></tr></table><table bgcolor=3D"#eb=
+ebeb" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tr><=
+td bgcolor=3D"#ffffff" class=3D"p30-15-0" style=3D"padding:30px 30px 15px 3=
+0px;border-radius:15px 15px 0 0"><table border=3D"0" cellpadding=3D"0" cell=
+spacing=3D"0" width=3D"100%"><tr><td style=3D"font-family:CiscoSans,Arial,s=
+ans-serif;color:#495057;font-weight:300;font-size:16px;line-height:22px;tex=
+t-align:left;padding-bottom:25px">Well done Marwan.!</td></tr><tr><td style=
+=3D"font-family:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;fo=
+nt-size:16px;line-height:22px;text-align:left;padding-bottom:15px">Excellen=
+t work on successfully completing <span style=3D"font-weight:700">Networkin=
+g Devices and Initial Configuration</span> course. It=E2=80=99s a great acc=
+omplishment and a powerful step towards new and exciting opportunities.</td=
+></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-serif;color:#495057=
+;font-weight:700;font-size:16px;line-height:22px;text-align:left;padding-to=
+p:15px">You=E2=80=99ve Earned a Digital Badge</td></tr><tr><td style=3D"fon=
+t-family:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;font-size=
+:16px;line-height:22px;text-align:left;padding-bottom:20px;padding-top:15px=
+">Show others this significant achievement by sharing your badge on social =
+media and professional networks. Follow the steps below to claim your digit=
+al badge:</td></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-serif;=
+color:#495057;font-weight:300;font-size:16px;line-height:22px;text-align:le=
+ft;padding-bottom:20px"><ol start=3D"1"><li>Go to our partner website: <a h=
+ref=3D"https://www.credly.com/badges/0839d6e3-ec56-4075-a8f1-fa791c3fa108/a=
+ccept" rel=3D"noopener" style=3D"text-decoration:none" target=3D"_blank"><s=
+pan style=3D"color:#53bae6;text-decoration:none;font-weight:700">Claim my b=
+adge</span></a></li></ol></td></tr><tr><td style=3D"font-family:CiscoSans,A=
+rial,sans-serif;color:#495057;font-weight:300;font-size:16px;line-height:22=
+px;text-align:left;padding-bottom:20px"><ol start=3D"2"><li>Use your email =
+from this message to create an account or sign in with your existing accoun=
+t.</li></ol></td></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-ser=
+if;color:#495057;font-weight:300;font-size:16px;line-height:22px;text-align=
+:left;padding-bottom:20px"><ol start=3D"3"><li>Once logged in, select the <=
+span style=3D"font-weight:700">Networking Devices and Initial Configuration=
+</span> badge, then select Accept.</li></ol></td></tr><tr><td style=3D"font=
+-family:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;font-size:=
+16px;line-height:22px;text-align:left;padding-bottom:20px"><ol start=3D"4">=
+<li>You can then share your digital badge via email or social media.</li></=
+ol></td></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-serif;color:=
+#495057;font-weight:300;font-size:16px;line-height:22px;text-align:left;pad=
+ding-bottom:20px"><ol start=3D"5"><li>You also have the option of downloadi=
+ng a printable certificate when you share your badge publicly. Find out mor=
+e about <a href=3D"https://support.credly.com/hc/en-us/articles/36002663987=
+2-Can-I-download-and-print-my-badge-certificate-" rel=3D"noopener" style=3D=
+"text-decoration:none" target=3D"_blank"><span style=3D"color:#53bae6;text-=
+decoration:none;font-weight:700">downloading and printing a badge</span>.</=
+a></li></ol></td></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-ser=
+if;color:#495057;font-weight:700;font-size:16px;line-height:22px;text-align=
+:left;padding-top:15px">Keep Moving Forward</td></tr><tr><td style=3D"font-=
+family:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;font-size:1=
+6px;line-height:22px;text-align:left;padding-bottom:20px;padding-top:15px">=
+Continue to build on your success by exploring more courses and resources i=
+n the Learning Catalog on NetAcad.com.</td></tr><tr><td style=3D"font-famil=
+y:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;font-size:16px;l=
+ine-height:22px;text-align:left;padding-bottom:20px;padding-top:20px">This =
+accomplishment is just the beginning. We are confident in your potential an=
+d excited to see the amazing things you will achieve.</td></tr><tr><td styl=
+e=3D"font-family:CiscoSans,Arial,sans-serif;color:#495057;font-weight:300;f=
+ont-size:16px;line-height:22px;text-align:left;padding-bottom:20px;padding-=
+top:20px"><p>Cheering you on,</p><p>The Cisco Networking Academy Team</p></=
+td></tr></table></td></tr></table><table bgcolor=3D"#ebebeb" border=3D"0" c=
+ellpadding=3D"0" cellspacing=3D"0" width=3D"100%"><tr><td bgcolor=3D"#02507=
+3" class=3D"p30-15-0" style=3D"padding:30px 30px 15px 30px;border-radius:0 =
+0 15px 15px"><table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" width=
+=3D"100%"><tr><td style=3D"text-align:center;padding-bottom:20px"><a href=
+=3D"https://www.facebook.com/cisconetworkingacademy/" rel=3D"noopener" styl=
+e=3D"color:#fff;text-decoration:none" target=3D"_blank"><span style=3D"marg=
+in-right:10px;cursor:pointer"><img alt=3D"facebook" src=3D"https://netacad.=
+com/skillsforall/img/email/facebook.png"></span></a><a href=3D"https://www.=
+youtube.com/playlist?list=3DPLA48B49E7FB15439B" rel=3D"noopener" style=3D"c=
+olor:#fff;text-decoration:none" target=3D"_blank"><span style=3D"margin-rig=
+ht:10px;cursor:pointer"><img alt=3D"yoyutube" src=3D"https://netacad.com/sk=
+illsforall/img/email/youtube.png"></span></a><a href=3D"https://x.com/Cisco=
+NetAcad" rel=3D"noopener" style=3D"color:#fff;text-decoration:none" target=
+=3D"_blank"><span style=3D"margin-right:10px;cursor:pointer"><img alt=3D"x"=
+ src=3D"https://netacad.com/skillsforall/img/email/x.png"></span></a><a hre=
+f=3D"https://www.linkedin.com/school/cisco-networking-academy1/" rel=3D"noo=
+pener" style=3D"color:#fff;text-decoration:none" target=3D"_blank"><span st=
+yle=3D"margin-right:10px;cursor:pointer"><img alt=3D"linkedIn" src=3D"https=
+://netacad.com/skillsforall/img/email/linkedIn.png"></span></a></td></tr><t=
+r><td style=3D"font-family:CiscoSans,Arial,sans-serif;color:#fff;font-weigh=
+t:400;font-size:12px;line-height:16px;text-align:center;padding-bottom:15px=
+">Join Cisco Networking Academy feeds to be the first to hear about updates=
+ and opportunities, and share your own innovative ideas.</td></tr><tr><td s=
+tyle=3D"font-family:CiscoSans,Arial,sans-serif;color:#fff;font-weight:400;f=
+ont-size:12px;line-height:16px;text-align:center;padding-bottom:10px">Pleas=
+e do not reply to this email.</td></tr><tr><td style=3D"font-family:CiscoSa=
+ns,Arial,sans-serif;color:#fff;font-weight:400;font-size:12px;line-height:1=
+6px;text-align:center;padding-bottom:10px">To update your preferences or un=
+subscribe, log into <a href=3D"https://netacad.com/" rel=3D"noopener" style=
+=3D"text-decoration:underline;color:#fff" target=3D"_blank">NetAcad.com</a>=
+, click on your profile in the top right corner, and update your Communicat=
+ion Opt-In preference.</td></tr><tr><td style=3D"font-family:CiscoSans,Aria=
+l,sans-serif;color:#fff;font-weight:400;font-size:12px;line-height:16px;tex=
+t-align:center;padding-bottom:10px">=C2=A92025   Cisco Systems, Inc. and/or=
+ its affiliates. All rights reserved. 170 W Tasman, San Jose, CA 95134.</td=
+></tr><tr><td style=3D"font-family:CiscoSans,Arial,sans-serif;color:#fff;fo=
+nt-weight:400;font-size:12px;line-height:16px;text-align:center;padding-bot=
+tom:10px"><span style=3D"border-right:1px solid #fff;margin-right:10px;padd=
+ing-right:10px"><a href=3D"https://www.cisco.com/" rel=3D"noopener" style=
+=3D"text-decoration:none;color:#fff" target=3D"_blank">Cisco.com</a></span>=
+<span style=3D"border-right:1px solid #fff;margin-right:10px;padding-right:=
+10px"><a href=3D"https://www.cisco.com/c/en/us/about/legal/privacy.html" re=
+l=3D"noopener" style=3D"text-decoration:none;color:#fff" target=3D"_blank">=
+Privacy Statement</a></span><span><a href=3D"https://www.cisco.com/c/en/us/=
+about/legal/trademarks.html" rel=3D"noopener" style=3D"text-decoration:none=
+;color:#fff" target=3D"_blank">Trademarks</a></span></td></tr></table></td>=
+</tr></table></td></tr></table></td></tr></table></body></html>
+------=_Part_939617_62790053.1771593325928--
+
+------=_Part_939616_614395364.1771593325928--
