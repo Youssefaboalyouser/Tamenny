@@ -1,0 +1,31 @@
+email_security_project/
+│
+├── app.py                # Flask entry point (need)
+├── config.py             # settings (partialy done)
+│
+├── routes/
+│   └── api.py            # API endpoints (need)
+│
+├── services/
+│   ├── parser.py         # Marowan(done)
+│   ├── virustotal.py     # Abdelrhman (done)
+│   ├── rule_engine.py    # Youssef (need)
+│   ├── nlp_model.py      # Omar & Mohamed (need)
+│   └── aggregator.py     # Final logic (partially done)
+│
+├── utils/
+│   ├── file_handler.py   # save/load files (need)
+│   ├── hash_utils.py     # hashing (need)
+│   └── extractor.py      # links, domains (need)
+│
+├── data/
+│   ├── raw_emails.eml
+│   ├── parsed/
+│   └── results/
+│
+├── templates/            # HTML (Flask uses this)
+│   └── index.html
+│
+├── static/               # CSS / JS
+│
+└── requirements.txt
