@@ -63,7 +63,6 @@
 {
   "email_id": "uuid-1234",
   "rule_based": {
-    "score": 75,
     "flags": [
       "SPF failed",
       "Domain misspelled (paypa1.com)",

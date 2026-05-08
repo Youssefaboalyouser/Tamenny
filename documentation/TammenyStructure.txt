@@ -9,7 +9,7 @@ email_security_project/
 ├── services/
 │   ├── parser.py         # Marowan(done)
 │   ├── virustotal.py     # Abdelrhman (done)
-│   ├── rule_engine.py    # Youssef (need)
+│   ├── rule_engine.py    # Youssef (done)
 │   ├── nlp_model.py      # Omar & Mohamed (need)
 │   └── aggregator.py     # Final logic (partially done)
 │
@@ -22,6 +22,7 @@ email_security_project/
 │   ├── raw_emails.eml
 │   ├── parsed/
 │   └── results/
+│   └──flags/
 │
 ├── templates/            # HTML (Flask uses this)
 │   └── index.html
