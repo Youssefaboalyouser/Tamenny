@@ -25,12 +25,61 @@ from datetime import datetime, timezone
 from email import policy
 from pathlib import Path
 from typing import Optional
-
+import io
+import tempfile
+import pytesseract
+import cv2
+import numpy as np
+from PIL import Image
+global is_image_email
 # --------------------------------------------------------------------------- #
 # Helper Functions                                                           #
 # --------------------------------------------------------------------------- #
 # These functions assist in decoding, parsing, and extracting data from email components.
 
+# Image MIME types to target for OCR
+IMAGE_MIME_TYPES = {"image/png", "image/jpeg", "image/jpg", "image/gif", "image/bmp", "image/tiff"}
+
+
+def preprocess_for_ocr(image_bytes: bytes) -> np.ndarray:
+    """
+    Convert raw image bytes → preprocessed numpy array for Tesseract.
+    Handles Arabic + English text via upscaling + Otsu thresholding.
+    """
+    # Decode bytes directly — no temp file needed
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    if img is None:
+        raise ValueError("Could not decode image bytes")
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    return thresh
+
+
+def ocr_image_bytes(image_bytes: bytes, lang: str = "ara+eng") -> str:
+    """
+    Run Tesseract OCR on raw image bytes.
+    Returns extracted text string.
+    """
+    preprocessed = preprocess_for_ocr(image_bytes)
+    config = r"--oem 3 --psm 3"
+    text = pytesseract.image_to_string(preprocessed, lang=lang, config=config)
+    return text.strip()
+
+
+def save_image_attachment(image_bytes: bytes, filename: str, output_dir: str = "output/images") -> str:
+    """
+    Save image bytes to disk. Returns the saved file path.
+    """
+    from pathlib import Path
+    out = Path(output_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    dest = out / filename
+    dest.write_bytes(image_bytes)
+    return str(dest)
 # Function to decode bytes to string with multiple encoding fallbacks
 def _safe_decode(payload: bytes, charset: str = "utf-8") -> str:
     """Decode bytes to str, falling back gracefully on encoding errors."""
@@ -165,7 +214,7 @@ def parse_eml(file_path: str | Path) -> dict:
 
     # Parse the email using Python's email library with a compatible policy
     msg: email.message.EmailMessage = email.message_from_bytes(
-        raw_bytes, policy=policy.compat32
+        raw_bytes, policy=policy.default
     )
 
     # Extract and parse sender and recipient information
@@ -186,21 +235,34 @@ def parse_eml(file_path: str | Path) -> dict:
     # Handle multipart emails by walking through each part
     if msg.is_multipart():
         for part in msg.walk():
-            content_type        = part.get_content_type()
+            content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition", ""))
-            charset             = part.get_content_charset()
-
+            charset = part.get_content_charset()
+            
             # Check if this part is an attachment
             if "attachment" in content_disposition or part.get_filename():
                 filename = _decode_header_value(part.get_filename())
                 payload  = part.get_payload(decode=True) or b""
                 if filename:
-                    attachments.append({
+                    attachment_record = {
                         "filename":    filename,
                         "type":        content_type,
                         **_hash_bytes(payload),  # Include hashes for integrity
-                    })
-                continue  # Skip further processing for attachments
+                    }
+                    if content_type in IMAGE_MIME_TYPES:
+                        try:
+                            ocr_text = ocr_image_bytes(payload)
+                            attachment_record["ocr_text"] = ocr_text or None
+
+                            # Optional: also save the image to disk
+                            saved_path = save_image_attachment(payload, filename)
+                            attachment_record["saved_path"] = saved_path
+
+                        except Exception as exc:
+                            attachment_record["ocr_error"] = str(exc)
+                    attachments.append(attachment_record)
+                continue
+                
 
             # Extract plain text content
             if content_type == "text/plain":
@@ -215,6 +277,25 @@ def parse_eml(file_path: str | Path) -> dict:
                 if raw:
                     html = _safe_decode(raw, charset)
                     all_links.extend(_extract_links(html))
+            if content_type in ("text/plain", "text/html"):
+                if (html and "cid:" in html) or (plain_text and "cid:" in plain_text):
+                    is_image_email = True
+            # Inline images (Content-ID based, common in HTML emails)
+            if content_type in IMAGE_MIME_TYPES and "inline" in content_disposition:
+                payload = part.get_payload(decode=True) or b""
+                filename = _decode_header_value(part.get_filename()) or f"inline_{uuid.uuid4().hex[:8]}.png"
+                try:
+                    ocr_text = ocr_image_bytes(payload)
+                    attachments.append({
+                        "filename":  filename,
+                        "type":      content_type,
+                        "inline":    True,
+                        "ocr_text":  ocr_text or None,
+                        **_hash_bytes(payload),
+                    })
+                except Exception as exc:
+                    attachments.append({"filename": filename, "ocr_error": str(exc)})
+
     # Handle single-part emails
     else:
         raw = msg.get_payload(decode=True)
