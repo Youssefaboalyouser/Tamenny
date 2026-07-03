@@ -896,7 +896,14 @@ function getVerdictClass(score) {
 function renderResult(r, { skipHistory = false } = {}) {
   const score   = r.risk_score ?? 0;
   const verdict = r.verdict ?? 'SAFE';
-  const vclass  = getVerdictClass(score);
+  // For message channels prefer server verdict when available (different thresholds)
+  let vclass  = getVerdictClass(score);
+  if (r._channel && r._channel !== 'email' && r.verdict) {
+    const vr = String(r.verdict).toUpperCase();
+    if (vr.includes('HIGH')) vclass = 'danger';
+    else if (vr.includes('SUSPICIOUS')) vclass = 'warn';
+    else vclass = 'safe';
+  }
   const emojis  = { safe: '✅', warn: '⚠️', danger: '🚨' };
   const msgs    = {
     safe:   'This message appears legitimate. No significant threats were detected.',
@@ -919,14 +926,15 @@ function renderResult(r, { skipHistory = false } = {}) {
 
   // Score bars
   const nlp = r.nlp_result ?? {};
-  const nlpContrib = nlp.is_spam ? Math.round(nlp.score * 30) : 0;
+  const maxNlpPoints = 15;
+  const nlpContrib = Math.round(nlp.score * maxNlpPoints);
   const flagScore  = Math.min(100, Math.round(score - nlpContrib));
 
   document.getElementById('score-breakdown').classList.add('show');
   document.getElementById('sb-tech-val').textContent = flagScore + ' pts';
   document.getElementById('sb-tech-bar').style.width  = Math.min(flagScore, 100) + '%';
   document.getElementById('sb-nlp-val').textContent  = nlpContrib + ' pts';
-  document.getElementById('sb-nlp-bar').style.width  = Math.min(nlpContrib * 3, 100) + '%';
+  document.getElementById('sb-nlp-bar').style.width  = Math.min(Math.round(nlpContrib * 100 / maxNlpPoints), 100) + '%';
 
   // Phishing flags
   document.getElementById('block-flags').classList.add('show');
@@ -998,7 +1006,8 @@ function renderResult(r, { skipHistory = false } = {}) {
   }
 
   if (!skipHistory) {
-    addHistory(score, r._channel ?? currentChannel, r.subject ?? r.content_preview ?? '(no preview)', r.id ?? null);
+    // store full analysis so messages (SMS/WhatsApp/Telegram) can be restored from local history
+    addHistory(score, r._channel ?? currentChannel, r.subject ?? r.content_preview ?? '(no preview)', r.id ?? null, r);
   }
   document.getElementById('reset-btn').classList.add('show');
 }
@@ -1038,18 +1047,32 @@ async function downloadPDF() {
 /* ══════════════════════════════════════════════════════════════
    HISTORY
 ══════════════════════════════════════════════════════════════ */
-function addHistory(score, channel, preview, analysisId = null) {
-  const vclass = getVerdictClass(score);
-  const labels = { safe: 'SAFE', warn: 'SUSPICIOUS', danger: 'HIGH RISK' };
+function addHistory(score, channel, preview, analysisId = null, analysis = null) {
+  // Determine visual class: prefer server verdict when available for non-email messages
+  let vclass = getVerdictClass(score);
   const icons  = { email: '📧', sms: '📱', whatsapp: '💬', telegram: '✈️' };
+
+  let label = null;
+  if (analysis && analysis.verdict) {
+    const v = String(analysis.verdict).toUpperCase();
+    if (v.includes('HIGH')) vclass = 'danger';
+    else if (v.includes('SUSPICIOUS')) vclass = 'warn';
+    else vclass = 'safe';
+    label = analysis.verdict;
+  }
+
+  const labels = { safe: 'SAFE', warn: 'SUSPICIOUS', danger: 'HIGH RISK' };
+  if (!label) label = labels[vclass] || 'SAFE';
+
   analysisHistory.unshift({
     score,
     channel,
     vclass,
-    label: labels[vclass],
+    label,
     preview: String(preview).substring(0,60),
     icon: icons[channel] ?? '📨',
     analysisId,
+    analysis // may be null for server-stored email rows
   });
   renderHistoryList();
 }
@@ -1135,6 +1158,17 @@ function renderHistoryList() {
       div.style.cursor = 'pointer';
       div.title = 'Click to restore this email analysis';
       div.addEventListener('click', () => loadHistoryAnalysis(h.analysisId));
+    } else if (h.analysis) {
+      // allow restoring local message/wa analysis stored in session
+      div.style.cursor = 'pointer';
+      div.title = 'Click to restore this analysis';
+      div.addEventListener('click', () => {
+        try {
+          renderResult({ ...h.analysis }, { skipHistory: true });
+        } catch (err) {
+          console.warn('Could not restore local analysis', err);
+        }
+      });
     }
     div.innerHTML = `
       <span class="hist-badge ${h.vclass}">${Math.round(h.score)}</span>
