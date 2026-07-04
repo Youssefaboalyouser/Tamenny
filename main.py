@@ -1,7 +1,14 @@
 """
+
+
+
 main.py — Tamenny FastAPI Application
 Serves the frontend via Jinja2 and registers all API routers.
 Run with: uvicorn main:app --reload
+
+
+
+
 """
 
 from fastapi import FastAPI, Request
