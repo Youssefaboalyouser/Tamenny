@@ -16,16 +16,16 @@ HEADERS = {
     "Accept": "application/json",
 }
 
-
+# data -> json . path -> list of keys . default -> fallback value 
 def _safe_get(data: dict, path: list, default=0):
     try:
         for key in path:
             data = data[key]
         return data
-    except (KeyError, TypeError):
+    except (KeyError, TypeError): 
         return default
 
-
+# convert number of detections to human redalbe verdic
 def _compute_verdict(malicious_votes: int) -> str:
     if malicious_votes >= 5:
         return "malicious"
@@ -33,7 +33,12 @@ def _compute_verdict(malicious_votes: int) -> str:
         return "suspicious"
     return "clean"
 
-
+"""
+send url to virustotal
+get analysis result 
+extract stats
+return structured result
+""" 
 def scan_url(url: str) -> Dict[str, Any]:
     """Submit URL to VirusTotal and return analysis result."""
     result: Dict[str, Any] = {
@@ -48,6 +53,7 @@ def scan_url(url: str) -> Dict[str, Any]:
         return result
 
     try:
+        # send request to virus total
         submit_resp = requests.post(
             f"{VT_BASE_URL}/urls",
             headers=HEADERS,
@@ -56,12 +62,12 @@ def scan_url(url: str) -> Dict[str, Any]:
         )
         if submit_resp.status_code == 429:
             raise Exception("Rate limit exceeded")
-        submit_resp.raise_for_status()
+        submit_resp.raise_for_status() 
 
-        analysis_id = _safe_get(submit_resp.json(), ["data", "id"], None)
+        analysis_id = _safe_get(submit_resp.json(), ["data", "id"], None) # extract analysis id
         if not analysis_id:
             raise Exception("Missing analysis ID in response")
-
+        # get analysis result 
         analysis_resp = requests.get(
             f"{VT_BASE_URL}/analyses/{analysis_id}",
             headers=HEADERS,
@@ -71,7 +77,8 @@ def scan_url(url: str) -> Dict[str, Any]:
             raise Exception("Rate limit exceeded")
         analysis_resp.raise_for_status()
 
-        stats = _safe_get(analysis_resp.json(), ["data", "attributes", "stats"], {})
+        stats = _safe_get(analysis_resp.json(), ["data", "attributes", "stats"], {}) # extract status -> "status": {"malicous":3,"harmless":60
+        # extract values 
         malicious = stats.get("malicious", 0)
         harmless = stats.get("harmless", 0)
 
@@ -87,8 +94,7 @@ def scan_url(url: str) -> Dict[str, Any]:
         result["error"] = str(e)
 
     return result
-
-
+ 
 def check_file_hash(sha256: str, filename: str = "unknown") -> Dict[str, Any]:
     """Check file reputation by SHA-256 hash."""
     result: Dict[str, Any] = {
