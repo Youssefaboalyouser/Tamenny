@@ -15,7 +15,7 @@ def _extract_links(parsed: Dict[str, Any]) -> List[str]:
     links = parsed.get("links") or []
     if not isinstance(links, list):
         return []
-    seen: Set[str] = set()
+    seen: Set[str] = set() # make set to remeber what links we already saw
     return [u for u in links if u and not (u in seen or seen.add(u))]
 
 
@@ -62,7 +62,7 @@ def run_virustotal_analysis(parsed: Dict[str, Any]) -> Dict[str, Any]:
         for idx, att in enumerate(attachments):
             result = check_file_hash(att["hash_sha256"], att["filename"])
             vt_attachments_results.append(result)
-            if idx < len(attachments) - 1:
+            if idx < len(attachments) - 1: # are there more links left to scan 
                 time.sleep(REQUEST_DELAY)
 
     except Exception as e:
